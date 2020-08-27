@@ -8,8 +8,6 @@ print_battery_percentage() {
 	# percentage displayed in the 2nd field of the 2nd row
 	if command_exists "pmset"; then
 		pmset -g batt | grep -o "[0-9]\{1,3\}%"
-	elif command_exists "acpi"; then
-		acpi -b | grep -m 1 -Eo "[0-9]+%"
 	elif command_exists "upower"; then
         # use DisplayDevice if available otherwise battery
 		local battery=$(upower -e | grep -E 'battery|DisplayDevice'| tail -n1)
@@ -32,6 +30,8 @@ print_battery_percentage() {
 		termux-battery-status | jq -r '.percentage' | awk '{printf("%d%%", $1)}'
 	elif command_exists "apm"; then
 		apm -l
+	elif command_exists "acpi"; then
+		acpi -b | grep -m 1 -Eo "[0-9]+%"
 	fi
 }
 
